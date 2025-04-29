@@ -16,14 +16,18 @@ function App() {
 
     try {
       const response = await axios.post('http://localhost:8000/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-      setMatches(response.data.matches);
-    } catch (error) {
+
+      if (response.data.status === "success") {
+        setMatches(response.data.matches || []);
+      } else {
+        alert("Extraction or matching failed.");
+      }
+    }
+    catch (error) {
       console.error("Error uploading file:", error);
-      alert("Error uploading file. Please try again.");
+      alert("An error occurred while uploading the file.");
     }
   };
 
