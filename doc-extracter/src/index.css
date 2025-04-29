@@ -1,13 +1,377 @@
-body {
+/* index.css */
+
+/* -- Variables (Optional but recommended for maintainability) -- */
+:root {
+  --color-text-default: #2d3748;
+  --color-text-muted: #4a5568;
+  --color-text-light: #718096;
+  --color-text-white: #ffffff;
+
+  --color-bg-body: linear-gradient(to bottom right, #eff6ff, #f9fafb, #f3f4f6); /* Mapped gradient */
+  --color-bg-card: #ffffff;
+  --color-bg-section: #f9fafb; /* Mapped bg-gray-50 */
+  --color-bg-input: #ffffff;
+  --color-bg-button-upload: #2563eb; /* Mapped bg-blue-600 */
+  --color-bg-button-upload-hover: #1d4ed8; /* Mapped hover:bg-blue-700 */
+  --color-bg-button-confirm: #f59e0b; /* Mapped bg-yellow-500 */
+  --color-bg-button-confirm-hover: #d97706; /* Mapped hover:bg-yellow-600 */
+  --color-bg-button-confirm-done: #9ca3af; /* Mapped bg-gray-400 */
+  --color-bg-button-export: #16a34a; /* Mapped bg-green-600 */
+  --color-bg-button-export-hover: #15803d; /* Mapped hover:bg-green-700 */
+  --color-bg-button-disabled: #d1d5db; /* Mapped bg-gray-300 */
+  --color-text-button-disabled: #6b7280; /* Mapped text-gray-500 */
+
+  --color-border-dashed: #d1d5db; /* Mapped border-gray-300 */
+  --color-focus-ring: #3b82f6; /* Mapped ring-blue-500 */
+
+  --color-confidence-high: #16a34a; /* Mapped text-green-600 */
+  --color-confidence-medium: #f59e0b; /* Mapped text-yellow-600 */
+  --color-confidence-low: #ef4444; /* Mapped text-red-600 */
+  --color-confidence-unknown: #6b7280; /* Mapped text-gray-500 */
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  --border-radius-sm: 0.125rem; /* 2px */
+  --border-radius-md: 0.375rem; /* 6px */
+  --border-radius-lg: 0.5rem; /* 8px */
+
+  --font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-family-mono: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+}
+
+/* -- Base Styles -- */
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  color: var(--color-text-default);
+  background: var(--color-bg-body);
+  min-height: 100vh;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600; /* Semibold default */
+}
+
+a {
+  color: var(--color-focus-ring);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, opacity 0.15s ease-in-out;
+  border-radius: var(--border-radius-md);
+  padding: 0.5rem 1rem; /* Default padding */
+  font-size: 1rem;
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text-white); /* Default button text */
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+input[type="text"], input[type="file"] {
+  font-family: inherit;
+  font-size: 0.875rem; /* text-sm */
+  padding: 0.5rem 0.75rem; /* px-3 py-2 */
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border-dashed);
+  width: 100%;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--color-focus-ring);
+  box-shadow: 0 0 0 2px rgba(var(--color-focus-ring), 0.2); /* Ring simulation */
+}
+
+
+/* -- Layout Components -- */
+.app-wrapper {
+  padding: 1rem;
+}
+
+.main-card {
+  max-width: 64rem; /* max-w-4xl */
+  margin-left: auto;
+  margin-right: auto;
+  background-color: var(--color-bg-card);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden; /* Needed for rounded corners with children */
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.main-heading {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700; /* font-bold */
+  margin-bottom: 2rem; /* mb-8 */
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.section-heading {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 600; /* font-semibold */
+  margin-bottom: 1rem; /* mb-4 */
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 2rem; /* mt-8 */
+  color: var(--color-text-light);
+  font-size: 0.875rem; /* text-sm */
+}
+
+/* -- Upload Section -- */
+.upload-section {
+  display: flex;
+  flex-direction: column; /* Default mobile */
+  align-items: center;
+  justify-content: center;
+  gap: 1rem; /* gap-4 */
+  margin-bottom: 2rem; /* mb-8 */
+  padding: 1.5rem; /* p-6 */
+  background-color: var(--color-bg-section);
+  border: 1px dashed var(--color-border-dashed);
+  border-radius: var(--border-radius-lg);
+}
+
+/* -- Buttons Section -- */
+.button-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem; /* gap-4 */
+  margin-bottom: 2rem; /* mb-8 */
+  padding-top: 1.5rem; /* pt-6 */
+  border-top: 1px solid #e5e7eb; /* Tailwind border-t */
+}
+
+/* -- Button Styles -- */
+.button {
+  padding: 0.5rem 1.25rem; /* px-5 py-2 */
+}
+
+.button-upload {
+  background-color: var(--color-bg-button-upload);
+}
+.button-upload:hover:not(:disabled) {
+  background-color: var(--color-bg-button-upload-hover);
+}
+.button-upload:disabled {
+  background-color: var(--color-bg-button-upload); /* Keep color when disabled by logic */
+}
+/* Specific state for uploading */
+.button-upload.uploading:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+/* Specific state for no file */
+.button-upload.no-file:disabled {
+  opacity: 0.5;
+}
+
+
+.button-confirm {
+  background-color: var(--color-bg-button-confirm);
+}
+.button-confirm:hover:not(:disabled) {
+  background-color: var(--color-bg-button-confirm-hover);
+}
+.button-confirm.confirmed:disabled { /* When confirmed=true */
+  background-color: var(--color-bg-button-confirm-done);
+  opacity: 1.0; /* Override default disabled opacity */
+  cursor: default; /* Indicate it's done, not just disabled */
+}
+
+
+.button-export {
+  background-color: var(--color-bg-button-disabled); /* Default disabled state */
+  color: var(--color-text-button-disabled);
+}
+.button-export.enabled { /* Add this class when confirmed=true */
+  background-color: var(--color-bg-button-export);
+  color: var(--color-text-white); /* Reset text color */
+}
+.button-export.enabled:hover {
+  background-color: var(--color-bg-button-export-hover);
+}
+.button-export:disabled:not(.enabled) { /* Style when disabled AND not enabled */
+    opacity: 1.0; /* Don't fade if explicitly disabled */
+    cursor: not-allowed;
+}
+
+/* -- File Input Specific Styles -- */
+.file-input {
+  display: block;
+  width: 100%;
+  font-size: 0.875rem; /* text-sm */
+  color: var(--color-text-light); /* text-gray-500 */
+  border: none; /* Remove wrapper border */
+  padding: 0; /* Remove wrapper padding */
+  background-color: transparent;
+}
+
+.file-input::file-selector-button {
+  margin-right: 1rem; /* file:mr-4 */
+  padding: 0.5rem 1rem; /* file:py-2 file:px-4 */
+  border-radius: var(--border-radius-md); /* file:rounded-md */
+  border: none; /* file:border-0 */
+  font-size: 0.875rem; /* file:text-sm */
+  font-weight: 600; /* file:font-semibold */
+  background-color: #eff6ff; /* file:bg-blue-50 */
+  color: #1d4ed8; /* file:text-blue-700 */
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.file-input:hover::file-selector-button {
+  background-color: #dbeafe; /* hover:file:bg-blue-100 */
+}
+
+/* -- Matches Display -- */
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* space-y-4 */
+}
+
+.match-item {
+  background-color: var(--color-bg-section);
+  border-radius: var(--border-radius-lg);
+  padding: 1.25rem; /* p-5 */
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.15s ease-in-out;
+}
+.match-item:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.match-item-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile default */
+  gap: 1rem; /* gap-4 */
+  align-items: center;
+}
+
+.match-label {
+  display: block;
+  font-size: 0.875rem; /* text-sm */
+  color: var(--color-text-light); /* text-gray-500 */
+  margin-bottom: 0.25rem; /* mb-1 */
+  font-weight: 500; /* font-medium */
+}
+
+.match-text {
+  color: var(--color-text-default); /* text-gray-800 */
+  word-break: break-word; /* break-words */
+}
+
+.match-input {
+  background-color: var(--color-bg-input);
+  padding: 0.5rem 0.75rem; /* px-3 py-2 */
+  width: 100%;
+  border-radius: var(--border-radius-md);
+  color: var(--color-text-default); /* text-gray-900 */
+  font-size: 0.875rem; /* text-sm */
+  box-shadow: var(--shadow-sm);
+  border: none; /* Overwrite default input border */
+}
+.match-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--color-focus-ring), 0.3); /* focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 */
+}
+
+
+.confidence-display {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600; /* font-semibold */
+}
+
+/* Confidence Colors */
+.confidence-high { color: var(--color-confidence-high); }
+.confidence-medium { color: var(--color-confidence-medium); }
+.confidence-low { color: var(--color-confidence-low); }
+.confidence-unknown { color: var(--color-confidence-unknown); }
+
+.confidence-label {
+  font-size: 0.75rem; /* text-xs */
+  color: var(--color-text-light);
+}
+
+.no-matches-message {
+    text-align: center;
+    color: var(--color-text-light);
+    margin-top: 1.5rem; /* mt-6 */
+}
+
+/* -- Responsive Adjustments -- */
+
+/* Small screens (sm: 640px) */
+@media (min-width: 640px) {
+  .app-wrapper {
+    padding: 2rem; /* sm:p-8 */
+  }
+  .card-content {
+    padding: 2rem; /* sm:p-8 */
+  }
+  .main-heading {
+    font-size: 2.25rem; /* sm:text-4xl */
+  }
+  .upload-section {
+    flex-direction: row; /* sm:flex-row */
+  }
+  .file-input {
+     width: auto; /* sm:w-auto */
+  }
+}
+
+/* Medium screens (md: 768px) */
+@media (min-width: 768px) {
+  .match-item-grid {
+    grid-template-columns: repeat(3, 1fr); /* md:grid-cols-3 */
+  }
+  .match-column-line {
+    grid-column: span 1 / span 1; /* md:col-span-1 */
+  }
+  .match-column-input {
+    grid-column: span 1 / span 1; /* md:col-span-1 */
+  }
+  .match-column-confidence {
+    grid-column: span 1 / span 1; /* md:col-span-1 */
+    text-align: right; /* md:text-right */
+  }
 }
