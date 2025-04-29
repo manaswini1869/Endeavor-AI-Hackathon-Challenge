@@ -37,23 +37,24 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     extracted_items = extract_response.json()
     queries = [item.get("Request Item", "") for item in extracted_items if "Request Item" in item]
-
     # Step 2: Matching
     async with httpx.AsyncClient() as client:
         match_response = await client.post(MATCHING_URL, json={"queries": queries})
 
     if match_response.status_code != 200:
         return {"status": "error", "details": match_response.text}
-
-    matches_raw = match_response.json().get("matches", [])
+    matches_raw = match_response.json()
+    matches_raw_result = matches_raw.get('results', [])
     matches = []
-    for query, results in zip(queries, matches_raw):
-        if results:
-            best_match = results[0]  # top result
+    for query in queries:
+        for match in matches_raw_result[query]:
+            print(match)
+            # print(matches_raw_result[query], "\n")
             matches.append({
                 "line": query,
-                "match": best_match.get("name", "N/A"),
-                "confidence": best_match.get("confidence", 0.0)
+                "match": match.get("match", ""),
+                "confidence": match.get("score", 0.0),
             })
+    print(matches)
 
     return {"status": "success", "matches": matches}
