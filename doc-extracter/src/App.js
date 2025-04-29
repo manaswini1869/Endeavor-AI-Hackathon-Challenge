@@ -6,10 +6,25 @@ function App() {
   const [matches, setMatches] = useState([]);
 
   const handleUpload = async () => {
+    if (!file) {
+      alert("Please select a file to upload.");
+      return;
+    }
+
     const formData = new FormData();
-    formData.append("file", file);
-    const res = await axios.post("http://localhost:8000/upload", formData);
-    setMatches(res.data.items);
+    formData.append('file', file);
+
+    try {
+      const response = await axios.post('http://localhost:8000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      setMatches(response.data.matches);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Error uploading file. Please try again.");
+    }
   };
 
   const handleExportCSV = () => {

@@ -21,12 +21,5 @@ def startup():
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File(...)):
     # Save the file locally
-    filename = f"uploads/{file.filename}"
-    with open(filename, "wb") as f:
+    with open(file.filename, "wb") as f:
         f.write(await file.read())
-
-    items = extract_line_items(file.filename)
-    matches = match_items(items)
-
-    po_id = save_po(file.filename, items, matches)
-    return {"po_id": po_id, "items": matches}
